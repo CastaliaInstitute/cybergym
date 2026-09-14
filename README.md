@@ -21,7 +21,7 @@ For USB-connected KaliYAI, the command receives the generated task directory and
 python scripts/run_kaliyai_usb.py runs/arvo-10400
 ```
 
-The bridge uses the existing debug ADB intent in the KaliYAI app. It stages only the task description and README on the phone, instructs KaliYAI to write `/sdcard/cybergym-task/poc`, then pulls that file back to the host for CyberGym validation.
+The bridge uses the existing debug ADB intent in the KaliYAI app. It stages the complete generated task bundle—including the vulnerable source archive—on the phone, instructs KaliYAI to write `/sdcard/cybergym-task/poc`, then pulls that file back to the host for CyberGym validation.
 
 Start the official CyberGym PoC server before running a task, following the upstream instructions. The runner never submits a result unless the KaliYAI agent created the expected PoC file. Do not run this against systems outside the CyberGym containers.
 
