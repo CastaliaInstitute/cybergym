@@ -12,7 +12,7 @@ python scripts/run_iclr.py \
   --server http://127.0.0.1:8666 \
   --task-id arvo:10400 \
   --out-dir runs/arvo-10400 \
-  --agent-command 'python scripts/run_kaliyai_usb.py'
+  --agent-command 'python /path/to/cybergym/scripts/run_kaliyai_usb.py'
 ```
 
 For USB-connected KaliYAI, the command receives the generated task directory and runs:
@@ -22,6 +22,8 @@ python scripts/run_kaliyai_usb.py runs/arvo-10400
 ```
 
 The bridge uses the existing debug ADB intent in the KaliYAI app. It stages the complete generated task bundle—including the vulnerable source archive—on the phone, instructs KaliYAI to write `/sdcard/cybergym-task/poc`, then pulls that file back to the host for CyberGym validation.
+
+The official ten-task sample subset can be run with `scripts/run_subset_usb.py`; it writes a `summary.json` under the selected output directory and returns nonzero unless every task passes.
 
 Start the official CyberGym PoC server before running a task, following the upstream instructions. The runner never submits a result unless the KaliYAI agent created the expected PoC file. Do not run this against systems outside the CyberGym containers.
 
