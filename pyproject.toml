@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cybergym"
+version = "0.1.0"
+description = "Safe, reproducible benchmark harness for KaliYAI cyber-security agents"
+requires-python = ">=3.10"
+
+[project.scripts]
+cybergym = "cybergym.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["cybergym*"]
