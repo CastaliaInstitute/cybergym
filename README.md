@@ -18,8 +18,11 @@ python scripts/run_iclr.py \
 For USB-connected KaliYAI, the command receives the generated task directory and runs:
 
 ```bash
+./scripts/prepare_kaliyai_usb.sh /path/to/app-debug.apk
 python scripts/run_kaliyai_usb.py runs/arvo-10400
 ```
+
+Before a task run, the installed debug APK must have a Gemini API key configured. If the key is absent, KaliYAI ignores the debug `send` request before producing a model/tool trace, and the USB bridge will correctly time out without creating a PoC.
 
 The bridge uses the existing debug ADB intent in the KaliYAI app. It stages the complete generated task bundle—including the vulnerable source archive—on the phone, instructs KaliYAI to write `/sdcard/cybergym-task/poc`, then pulls that file back to the host for CyberGym validation.
 

@@ -3,3 +3,7 @@ __pycache__/
 .pytest_cache/
 reports/
 *.egg-info/
+.venv/
+.upstream/
+.data/
+runs/
