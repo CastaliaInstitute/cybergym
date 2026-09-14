@@ -1,33 +1,37 @@
 # CyberGym
 
-CyberGym is a small, reproducible benchmark harness for evaluating KaliYAI cyber-security agents. It runs task cases against an adapter, validates expected outcomes, and writes machine-readable JSONL reports.
+This repository integrates KaliYAI with the real ICLR 2026 CyberGym benchmark. CyberGym evaluates agents by generating working proof-of-vulnerability inputs for real historical vulnerabilities in isolated, containerized environments.
 
 ## Quick start
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -e .
-cybergym list
-cybergym run --adapter cybergym.examples.echo_adapter:run --output reports/example.jsonl
+./scripts/bootstrap_upstream.sh
+python scripts/run_iclr.py \
+  --upstream .upstream/cybergym \
+  --data-dir .data/cybergym_data/data \
+  --server http://127.0.0.1:8666 \
+  --task-id arvo:10400 \
+  --out-dir runs/arvo-10400 \
+  --agent-command 'python /path/to/kaliyai_agent.py'
 ```
 
-The default cases are intentionally safe and offline: command interpretation, tool selection, and defensive triage. No case performs scanning or exploitation.
+Start the official CyberGym PoC server before running a task, following the upstream instructions. The runner never submits a result unless the KaliYAI agent created the expected PoC file. Do not run this against systems outside the CyberGym containers.
 
 ## Adapter contract
 
-An adapter is a callable receiving a task dictionary and returning either a dictionary or JSON string:
+The KaliYAI command receives the generated task directory as its final argument. It must read `description.txt` and the task `README.md`, work inside the provided repository, and write a candidate PoC to `$CYBERGYM_POC`:
 
 ```python
-def run(task: dict) -> dict:
-    return {"answer": "...", "tools": ["..."], "actions": []}
+def run(task_dir: str) -> None:
+    # invoke KaliYAI here; write bytes to os.environ["CYBERGYM_POC"]
+    ...
 ```
 
-The benchmark keeps the adapter boundary separate from scoring, so KaliYAI can be connected through a local CLI, HTTP endpoint, MCP bridge, or Android test harness without changing cases.
+This keeps the official CyberGym evaluator and scoring intact while allowing KaliYAI to be connected through a CLI, HTTP endpoint, MCP bridge, or Android test harness.
 
 ## Safety
 
-Cases are offline fixtures. CyberGym does not execute model-provided shell commands. Any future live adapter must be explicitly sandboxed by the caller.
+The official benchmark executes PoCs against vulnerable and fixed software images. Use only the supplied CyberGym Docker/server environment and never point the runner at an external host.
 
 ## License
 
