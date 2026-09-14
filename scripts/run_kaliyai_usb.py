@@ -46,6 +46,8 @@ def main() -> int:
         if result.returncode == 0:
             pull = ["adb"] + (["-s", args.serial] if args.serial else [])
             subprocess.run(pull + ["pull", f"{args.device_dir}/poc", str(args.task_dir / "poc")], check=True)
+            log = adb(args.serial, "logcat", "-d", "-s", "KaliyaiEval:D", "*:S")
+            (args.task_dir / "kaliyai.log").write_text(log)
             return 0
         time.sleep(5)
     raise SystemExit("Timed out waiting for KaliYAI to write the device-side PoC")
